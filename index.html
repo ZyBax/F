@@ -21,15 +21,9 @@ var firebaseConfig = {
   appId: "1:918393231377:web:2253bba1a9d160c60279b0"
 };
 firebase.initializeApp(firebaseConfig);
-
-// Get a reference to the database service
 var database = firebase.database();
-
-// Get the values of the Twitter and GitHub boxes from the form
 var twitter = document.getElementById("twitter").value;
 var github = document.getElementById("github").value;
-
-// Store the Twitter and GitHub usernames in Firebase
 function storeUsernames() {
   var ref = database.ref("usernames");
   ref.push({
@@ -37,8 +31,6 @@ function storeUsernames() {
     github: github
   });
 }
-
-// Check if an account has already been made by comparing the values of Twitter and GitHub boxes with those stored in the database
 function checkAccount() {
   var ref = database.ref("usernames");
   ref.once("value")
@@ -53,8 +45,6 @@ function checkAccount() {
       storeUsernames();
     });
 }
-
-// Add an event listener to the submit button
 document.querySelector("button[type='submit']").addEventListener("click", function(event) {
   event.preventDefault();
   checkAccount();
