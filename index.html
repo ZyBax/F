@@ -11,6 +11,56 @@
 }
 </style>
 <body>
+  // Initialize Firebase
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  databaseURL: "YOUR_DATABASE_URL",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+
+// Get a reference to the database service
+var database = firebase.database();
+
+// Get the values of the Twitter and GitHub boxes from the form
+var twitter = document.getElementById("twitter").value;
+var github = document.getElementById("github").value;
+
+// Store the Twitter and GitHub usernames in Firebase
+function storeUsernames() {
+  var ref = database.ref("usernames");
+  ref.push({
+    twitter: twitter,
+    github: github
+  });
+}
+
+// Check if an account has already been made by comparing the values of Twitter and GitHub boxes with those stored in the database
+function checkAccount() {
+  var ref = database.ref("usernames");
+  ref.once("value")
+    .then(function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        var childData = childSnapshot.val();
+        if (childData.twitter === twitter && childData.github === github) {
+          alert("An account has already been made with these usernames.");
+          return;
+        }
+      });
+      storeUsernames();
+    });
+}
+
+// Add an event listener to the submit button
+document.querySelector("button[type='submit']").addEventListener("click", function(event) {
+  event.preventDefault();
+  checkAccount();
+});
+
   <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
